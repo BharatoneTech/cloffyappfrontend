@@ -9,7 +9,7 @@ import LandingLogin from "./pages/user/LandingLogin.jsx";
 
 // ADMIN PAGES
 import AdminLogin from "./pages/admin/AdminLogin.jsx";
-// import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import AdminDashboard from "./pages/admin/admindashboard.jsx";  // ✅ Your correct file path
 
 export default function App() {
   return (
@@ -26,6 +26,8 @@ export default function App() {
         path="/user/dashboard"
         element={
           <ProtectedRoute roles={["user"]}>
+            {/* Add User Dashboard here when ready */}
+            {/* <UserDashboard /> */}
           </ProtectedRoute>
         }
       />
@@ -35,6 +37,7 @@ export default function App() {
         path="/admin/dashboard"
         element={
           <ProtectedRoute roles={["admin"]}>
+            <AdminDashboard />   {/* ✅ Loads your admin dashboard */}
           </ProtectedRoute>
         }
       />
