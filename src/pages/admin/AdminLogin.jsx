@@ -3,7 +3,7 @@ import { adminLogin } from "../../api/auth/adminAuth";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 
-function AdminLogin() {
+export default function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { loginWithToken } = useContext(AuthContext);
@@ -11,37 +11,83 @@ function AdminLogin() {
 
   const submit = async (e) => {
     e.preventDefault();
-
     try {
       const res = await adminLogin(username, password);
-      loginWithToken(res.data.token, res.data.user);
+      const token = res.data.token;
+      const user = res.data.user;
+
+      if (!token || !user) {
+        alert("Invalid response from server");
+        return;
+      }
+
+      loginWithToken(token, user);
       navigate("/admin/dashboard");
     } catch (err) {
+      console.error("Login failed:", err);
       alert("Admin login failed");
     }
   };
 
   return (
-    <div>
-      <h2>Admin Login</h2>
-      <form onSubmit={submit}>
-        <input
-          placeholder="Admin Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+    <div
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{ backgroundColor: "rgb(64, 26, 19)" }}
+    >
+      {/* Classical Login Card */}
+      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-md">
+        
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-6">
+          <img
+            src="/images/cloffylogo.png"
+            alt="Cloffy Logo"
+            className="w-28 h-28 object-contain"
+          />
+          <h2 className="mt-3 text-2xl font-bold text-gray-800">
+            Admin Login
+          </h2>
+        </div>
 
-        <input
-          type="password"
-          placeholder="Admin Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        {/* Form */}
+        <form onSubmit={submit} className="space-y-4">
+          
+          <div>
+            <label className="text-gray-700 font-semibold text-sm">
+              Username
+            </label>
+            <input
+              placeholder="Enter admin username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full mt-1 p-3 border rounded-lg focus:ring-2 focus:ring-yellow-600 outline-none"
+            />
+          </div>
 
-        <button type="submit">Login</button>
-      </form>
+          <div>
+            <label className="text-gray-700 font-semibold text-sm">
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="Enter admin password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full mt-1 p-3 border rounded-lg focus:ring-2 focus:ring-yellow-600 outline-none"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 rounded-lg font-semibold bg-yellow-600 hover:bg-yellow-700 text-white transition"
+          >
+            Login
+          </button>
+        </form>
+
+        {/* Footer */}
+       
+      </div>
     </div>
   );
 }
-
-export default AdminLogin;

@@ -7,23 +7,48 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     token: localStorage.getItem("token") || null,
-    user: null,
+    user: JSON.parse(localStorage.getItem("user") || "null"),
     loading: true,
   });
 
-  // Load user on refresh
   useEffect(() => {
     const init = async () => {
-      if (!auth.token) {
+      const savedToken = localStorage.getItem("token");
+      const savedUser = JSON.parse(localStorage.getItem("user") || "null");
+
+      // If token or user missing => logout state
+      if (!savedToken || !savedUser) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
         setAuth({ token: null, user: null, loading: false });
         return;
       }
 
       try {
         const res = await getMe();
-        setAuth({ token: auth.token, user: res.data, loading: false });
-      } catch {
+        const apiData = res.data;
+
+        const user =
+          apiData.user ||
+          apiData.admin ||
+          apiData.data?.user ||
+          apiData.data?.admin ||
+          apiData.data ||
+          null;
+
+        if (!user) throw new Error("Invalid user data from /auth/me");
+
+        localStorage.setItem("user", JSON.stringify(user));
+
+        setAuth({
+          token: savedToken,
+          user,
+          loading: false,
+        });
+      } catch (err) {
+        console.error("AUTH ERROR:", err);
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         setAuth({ token: null, user: null, loading: false });
       }
     };
@@ -33,11 +58,18 @@ export const AuthProvider = ({ children }) => {
 
   const loginWithToken = (token, user) => {
     localStorage.setItem("token", token);
-    setAuth({ token, user, loading: false });
+    localStorage.setItem("user", JSON.stringify(user));
+
+    setAuth({
+      token,
+      user,
+      loading: false,
+    });
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setAuth({ token: null, user: null, loading: false });
   };
 

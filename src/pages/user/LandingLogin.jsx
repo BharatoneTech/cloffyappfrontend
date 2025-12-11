@@ -1,3 +1,4 @@
+// src/pages/user/LandingLogin.jsx
 import React, { useState, useContext } from "react";
 import { userLoginOrRegister } from "../../api/auth/userAuth";
 import { AuthContext } from "../../context/AuthContext.jsx";
@@ -22,21 +23,61 @@ export default function LandingLogin() {
   };
 
   return (
-    <div>
-      <h2>User Login</h2>
-      <form onSubmit={submit}>
-        <input
-          placeholder="Contact Number"
-          value={contact}
-          onChange={(e) => setContact(e.target.value)}
-        />
-        <input
-          placeholder="Name (optional)"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <button type="submit">Continue</button>
-      </form>
+    <div
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{ backgroundColor: "rgb(64, 26, 19)" }} // Same as Admin UI
+    >
+      {/* Login Card */}
+      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-md">
+        
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-6">
+          <img
+            src="/images/cloffylogo.png"
+            alt="Cloffy Logo"
+            className="w-28 h-28 object-contain"
+          />
+          <h2 className="mt-3 text-2xl font-bold text-gray-800">
+            User Login
+          </h2>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={submit} className="space-y-4">
+
+          <div>
+            <label className="text-gray-700 font-semibold text-sm">
+              Contact Number
+            </label>
+            <input
+              placeholder="Enter phone number"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              className="w-full mt-1 p-3 border rounded-lg focus:ring-2 focus:ring-yellow-600 outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="text-gray-700 font-semibold text-sm">
+              Name (optional)
+            </label>
+            <input
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full mt-1 p-3 border rounded-lg focus:ring-2 focus:ring-yellow-600 outline-none"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 rounded-lg font-semibold bg-yellow-600 hover:bg-yellow-700 text-white transition"
+          >
+            Continue
+          </button>
+        </form>
+
+      </div>
     </div>
   );
 }

@@ -1,25 +1,47 @@
+// src/components/ProtectedRoute.jsx
 import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 
 export default function ProtectedRoute({ children, roles = [] }) {
   const { token, user, loading } = useContext(AuthContext);
+  const location = useLocation();
 
-  // Still loading user data
-  if (loading) {
-    return <div style={{ padding: 20 }}>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+
+  const isUserRoute = location.pathname.startsWith("/user");
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+  // --------------------------
+  // USER PROTECTED ROUTES
+  // --------------------------
+  if (isUserRoute) {
+    if (!token || !user) return <Navigate to="/login" replace />;
+
+    if (roles.length > 0 && !roles.includes("user"))
+      return <Navigate to="/login" replace />;
+
+    if (user.role !== "user") return <Navigate to="/login" replace />;
+
+    return children;
   }
 
-  // If not logged in → redirect to landing login
-  if (!token || !user) {
-    return <Navigate to="/" replace />;
+  // --------------------------
+  // ADMIN PROTECTED ROUTES
+  // --------------------------
+  if (isAdminRoute) {
+    if (!token || !user)
+      return <Navigate to="/cloffy/admin" replace />;
+
+    if (roles.length > 0 && !roles.includes("admin"))
+      return <Navigate to="/cloffy/admin" replace />;
+
+    if (user.role !== "admin")
+      return <Navigate to="/cloffy/admin" replace />;
+
+    return children;
   }
 
-  // If route requires certain roles → validate
-  if (roles.length > 0 && !roles.includes(user.role)) {
-    return <Navigate to="/" replace />;
-  }
-
-  // Access granted → show child component
+  // Public routes → accessible to everyone
   return children;
 }
