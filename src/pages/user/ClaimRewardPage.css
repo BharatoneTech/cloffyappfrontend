@@ -1,0 +1,249 @@
+/* src/pages/user/ClaimRewardPage.css */
+
+/* Basic layout */
+.crp-container {
+  padding: 16px;
+  min-height: 100vh;
+  background: #f5f7fa;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #111827;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  right: 16px;
+  top: 16px;
+  z-index: 99999;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  font-weight: 700;
+}
+.toast-success { background: #16a34a; }
+.toast-error { background: #ef4444; }
+
+.page-title {
+  margin-top: 6px;
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+/* muted text */
+.muted { color: #6b7280; }
+.small-text { font-size: 13px; }
+
+/* Rewards grid */
+.rewards-area { margin-top: 12px; }
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+/* Card */
+.reward-card {
+  background: #fff;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reward-card.expired {
+  border: 1px solid rgba(239,68,68,0.25);
+}
+
+.reward-left { flex: 1; min-width: 0; }
+.reward-title-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 800;
+}
+.reward-code { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; display: inline-block; vertical-align: middle; }
+.reward-desc { font-size: 13px; color: #666; margin-top: 8px; }
+.reward-claimed { margin-top: 6px; font-size: 12px; color: #666; }
+
+/* Actions */
+.reward-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 12px;
+}
+.btn-outline {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: transparent;
+  cursor: pointer;
+}
+.btn-primary {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: none;
+  background: #401A13;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Badges */
+.badge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+.badge-active { background: #ecfccb; color: #365314; }
+.badge-used { background: #f3f4f6; color: #6b7280; border-radius: 8px; }
+.badge-expired { background: #fee2e2; color: #991b1b; }
+.badge-default { background: #f3f4f6; color: #6b7280; }
+
+/* Modal backdrop and card */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99998;
+  padding: 16px;
+}
+.modal-card {
+  width: 100%;
+  max-width: 980px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  box-sizing: border-box;
+  max-height: 92vh;
+  overflow: auto;
+}
+
+/* Header */
+.modal-header { display: flex; justify-content: space-between; align-items: start; }
+.modal-title { margin: 0; font-size: 18px; }
+.modal-close {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Modal body */
+.section-title { font-weight: 700; margin-top: 12px; margin-bottom: 8px; }
+.modal-products-list { display: grid; gap: 10px; }
+
+/* Product row */
+.modal-product-row {
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #f8fffa;
+  box-sizing: border-box;
+}
+.product-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.product-main { flex: 1; min-width: 0; }
+.product-title { font-weight: 800; }
+.product-sub { font-size: 13px; color: #666; margin-top: 6px; }
+
+.qty-row {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qty-label { font-size: 13px; }
+.qty-input {
+  width: 70px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+.fixed-pill { margin-left: 8px; color: #0b8a4a; font-weight: 700; }
+
+/* Addons */
+.addons-list { margin-top: 8px; }
+.addons-title { font-size: 12px; color: #666; }
+.addons-items { margin-top: 6px; display: flex; gap: 10px; flex-wrap: wrap; }
+.addon-item { display: inline-flex; gap: 6px; align-items: center; }
+.addon-text { font-size: 12px; }
+
+/* right column in product row */
+.product-right { text-align: right; min-width: 110px; }
+.small-muted { font-size: 12px; color: #666; }
+.free-count { margin-top: 6px; font-size: 12px; color: #0b8a4a; }
+
+/* Modal summary */
+.modal-summary {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.summary-left { max-width: 560px; flex: 1 1 320px; }
+.summary-right { text-align: right; flex: 0 0 220px; }
+.sub-title { font-size: 13px; font-weight: 700; margin-top: 12px; }
+.free-badges { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+.free-pill { background: #f3f4f6; padding: 6px 10px; border-radius: 999px; font-size: 13px; }
+
+.amount { font-size: 22px; font-weight: 800; margin-top: 6px; }
+.summary-actions { display: flex; gap: 10px; margin-top: 12px; justify-content: flex-end; }
+
+/* responsive: small screens */
+@media (max-width: 900px) {
+  .rewards-grid { grid-template-columns: 1fr; }
+  .reward-actions { margin-top: 10px; }
+  .reward-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .reward-actions { align-self: stretch; display: flex; justify-content: flex-end; width: 100%; }
+
+  .modal-card { max-width: 760px; padding: 14px; }
+  .product-image { width: 68px; height: 68px; }
+  .qty-input { width: 60px; }
+  .summary-right { flex-basis: 100%; text-align: left; }
+  .modal-summary { flex-direction: column; align-items: stretch; }
+}
+
+/* mobile: make modal full-screen-ish */
+@media (max-width: 480px) {
+  .modal-card {
+    border-radius: 12px;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 12px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-body { overflow: auto; flex: 1 1 auto; }
+  .modal-products-list { gap: 8px; }
+  .modal-product-row { flex-direction: column; align-items: stretch; }
+  .product-image { width: 100%; height: 160px; border-radius: 8px; object-fit: cover; }
+  .product-right { text-align: left; min-width: auto; margin-top: 8px; }
+  .qty-row { gap: 6px; }
+  .qty-input { width: 100%; max-width: 140px; }
+  .reward-code { max-width: 120px; }
+  .summary-right { text-align: left; }
+  .summary-actions { justify-content: flex-start; }
+}
+
+/* small polish */
+.btn-outline:disabled, .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }

@@ -4,17 +4,7 @@ import React from "react";
 export default function ProfileMenu({ onClose, onHistory, onRewards, onLogout }) {
   return (
     <div
-      style={{
-        position: "absolute",
-        right: 10,
-        top: 60,
-        background: "white",
-        borderRadius: "10px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-        padding: "12px",
-        width: "160px",
-        zIndex: 100,
-      }}
+    
     >
       <div
         onClick={onHistory}

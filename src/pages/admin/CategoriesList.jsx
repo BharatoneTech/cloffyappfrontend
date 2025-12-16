@@ -5,25 +5,25 @@ import { useNavigate } from "react-router-dom";
 import {
   getCategories,
   deleteCategory,
+  activateAllCategories,
+  inactivateAllCategories,
 } from "../../api/admin/categoryApi";
 
 export default function CategoriesList() {
   const [list, setList] = useState([]);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   const navigate = useNavigate();
 
   const load = async () => {
-    try {
-      const res = await getCategories();
-      let data = res.data;
-
-      if (Array.isArray(data)) setList(data);
-      else if (Array.isArray(data.data)) setList(data.data);
-      else if (Array.isArray(data.categories)) setList(data.categories);
-      else setList([]);
-    } catch (err) {
-      console.error("Failed to load categories:", err);
-      setList([]);
-    }
+    const res = await getCategories();
+    const data = res.data?.data || res.data || [];
+    setList(data);
   };
 
   useEffect(() => {
@@ -35,6 +35,30 @@ export default function CategoriesList() {
     await deleteCategory(id);
     load();
   };
+
+  /* ===============================
+     SEARCH + STATUS FILTER
+  ================================ */
+  const filteredList = list.filter((c) => {
+    const matchSearch = c.category_name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchStatus =
+      statusFilter === "ALL" || c.status === statusFilter;
+
+    return matchSearch && matchStatus;
+  });
+
+  /* ===============================
+     PAGINATION
+  ================================ */
+  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedList = filteredList.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const card = {
     background: "white",
@@ -55,29 +79,74 @@ export default function CategoriesList() {
           padding: "30px",
         }}
       >
-        <h2 style={{ fontSize: "26px", fontWeight: "700" }}>Categories</h2>
+        <h2 style={{ fontSize: "26px", fontWeight: "700" }}>
+          Categories
+        </h2>
 
-        <button
-          onClick={() => navigate("/admin/categories/add")}
-          style={{
-            padding: "10px 16px",
-            background: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            marginBottom: "15px",
+        {/* ACTION BUTTONS */}
+        <div style={{ marginBottom: "15px" }}>
+          <button
+            onClick={() => navigate("/admin/categories/add")}
+            style={addBtn}
+          >
+            + Add Category
+          </button>
+
+         <button
+          onClick={async () => {
+            if (!window.confirm("Activate ALL categories?")) return;
+            await activateAllCategories();
+            load();
           }}
+          style={activateBtn}
         >
-          + Add Category
+          Activate All
         </button>
+
+          <button
+            onClick={async () => {
+              if (!window.confirm("Inactivate ALL categories?")) return;
+              await inactivateAllCategories();
+              load();
+            }}
+            style={bulkBtn}
+          >
+            Inactivate All
+          </button>
+        </div>
+
+        {/* SEARCH + FILTER */}
+        <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
+          <input
+            placeholder="Search category..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
+            style={searchBox}
+          />
+
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            style={searchBox}
+          >
+            <option value="ALL">All</option>
+            <option value="ACTIVE">Active</option>
+            <option value="INACTIVE">Inactive</option>
+          </select>
+        </div>
 
         <div style={card}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>
                 <th style={th}>#</th>
-                <th style={th}>Category Name</th>
+                <th style={th}>Category</th>
                 <th style={th}>Image</th>
                 <th style={th}>Status</th>
                 <th style={th}>Actions</th>
@@ -85,31 +154,29 @@ export default function CategoriesList() {
             </thead>
 
             <tbody>
-              {list.length === 0 && (
+              {paginatedList.length === 0 && (
                 <tr>
-                  <td colSpan="5" style={{ padding: "20px", textAlign: "center" }}>
-                    No categories found.
+                  <td colSpan="5" style={{ textAlign: "center", padding: "20px" }}>
+                    No categories found
                   </td>
                 </tr>
               )}
 
-              {list.map((c, i) => (
+              {paginatedList.map((c, i) => (
                 <tr key={c.id}>
-                  <td style={td}>{i + 1}</td>
+                  <td style={td}>{startIndex + i + 1}</td>
                   <td style={td}>{c.category_name}</td>
 
                   <td style={td}>
                     {c.image && (
                       <img
-                        src={c.image}       // Cloudinary URL directly
+                        src={c.image}
                         width={60}
                         height={60}
                         style={{
                           objectFit: "cover",
                           borderRadius: "10px",
-                          border: "1px solid #ccc",
                         }}
-                        alt="category"
                       />
                     )}
                   </td>
@@ -118,7 +185,8 @@ export default function CategoriesList() {
                     <span
                       style={{
                         padding: "4px 10px",
-                        background: c.status === "ACTIVE" ? "#4CAF50" : "#777",
+                        background:
+                          c.status === "ACTIVE" ? "#4CAF50" : "#999",
                         color: "white",
                         borderRadius: "6px",
                         fontSize: "12px",
@@ -130,34 +198,84 @@ export default function CategoriesList() {
 
                   <td style={td}>
                     <button
-                      onClick={() => navigate(`/admin/categories/edit/${c.id}`)}
+                      onClick={() =>
+                        navigate(`/admin/categories/edit/${c.id}`)
+                      }
                       style={editBtn}
                     >
                       Edit
                     </button>
 
-                    <button onClick={() => remove(c.id)} style={deleteBtn}>
+                    <button
+                      onClick={() => remove(c.id)}
+                      style={deleteBtn}
+                    >
                       Delete
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
-
           </table>
+
+          {/* PAGINATION */}
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => p - 1)}
+            >
+              ◀ Prev
+            </button>
+
+            <span style={{ margin: "0 10px" }}>
+              Page {currentPage} of {totalPages || 1}
+            </span>
+
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((p) => p + 1)}
+            >
+              Next ▶
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-// ---------- UI STYLES ----------
+/* ===============================
+   STYLES
+================================ */
+const searchBox = {
+  padding: "10px",
+  borderRadius: "6px",
+  border: "1px solid #ccc",
+};
+
+const addBtn = {
+  padding: "10px 16px",
+  background: "#4CAF50",
+  color: "white",
+  border: "none",
+  borderRadius: "6px",
+  cursor: "pointer",
+};
+
+const bulkBtn = {
+  padding: "10px 16px",
+  background: "#ff9800",
+  color: "white",
+  border: "none",
+  borderRadius: "6px",
+  cursor: "pointer",
+  marginLeft: "10px",
+};
+
 const th = {
   background: "#f5f5f5",
   padding: "12px",
-  textAlign: "left",
   borderBottom: "2px solid #ddd",
-  fontWeight: "600",
 };
 
 const td = {
@@ -182,4 +300,24 @@ const deleteBtn = {
   border: "none",
   borderRadius: "4px",
   cursor: "pointer",
+};
+
+const activateBtn = {
+  padding: "10px 16px",
+  background: "#4CAF50",
+  color: "white",
+  border: "none",
+  borderRadius: "6px",
+  cursor: "pointer",
+  marginLeft: "10px",
+};
+
+const inactivateBtn = {
+  padding: "10px 16px",
+  background: "#ff9800",
+  color: "white",
+  border: "none",
+  borderRadius: "6px",
+  cursor: "pointer",
+  marginLeft: "10px",
 };

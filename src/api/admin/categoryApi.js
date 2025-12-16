@@ -15,3 +15,9 @@ export const updateCategory = (id, formData) =>
 
 export const deleteCategory = (id) => client.delete(`/categories/${id}`);
 
+
+export const inactivateAllCategories = () =>
+  client.put("/categories/inactivate/all");
+
+export const activateAllCategories = () =>
+  client.put("/categories/activate/all");

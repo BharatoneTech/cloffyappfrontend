@@ -1,3 +1,4 @@
+// src/api/admin/productApi.js
 import client from "../axiosClient";
 
 export const getProducts = () => client.get("/products");
@@ -20,3 +21,7 @@ export const updateProduct = (id, formData) =>
 
 export const deleteProduct = (id) =>
   client.delete(`/products/${id}`);
+
+// NEW: Bulk update status by category
+export const bulkUpdateCategoryStatus = (categoryId, status) =>
+  client.put(`/products/category/${categoryId}/status`, { status });

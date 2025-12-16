@@ -9,6 +9,8 @@ import LandingLogin from "./pages/user/LandingLogin.jsx";
 import UserDashboard from "./pages/user/UserDashboard.jsx";
 import CheckoutPage from "./pages/user/CheckoutPage.jsx";
 import OrderHistoryPage from "./pages/user/OrderHistoryPage.jsx";
+import ClaimRewardPage from "./pages/user/ClaimRewardPage.jsx"; 
+
 
 // ADMIN PAGES
 import AdminLogin from "./pages/admin/AdminLogin.jsx";
@@ -29,6 +31,8 @@ import AddEditIngredient from "./pages/admin/AddEditIngredient.jsx";
 // REWARDS PAGES
 import RewardsList from "./pages/admin/RewardsList.jsx";
 import AddEditReward from "./pages/admin/AddEditReward.jsx";
+import CompletedOrders from "./pages/admin/CompletedOrders.jsx";
+
 
 export default function App() {
   return (
@@ -72,6 +76,16 @@ export default function App() {
         element={
           <ProtectedRoute roles={["user"]}>
             <OrderHistoryPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ⭐ NEW: USER REWARDS / CLAIM PAGE */}
+      <Route
+        path="/user/rewards"
+        element={
+          <ProtectedRoute roles={["user"]}>
+            <ClaimRewardPage />
           </ProtectedRoute>
         }
       />
@@ -196,6 +210,15 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
+<Route
+  path="/admin/completed-orders"
+  element={
+    <ProtectedRoute roles={["admin"]}>
+      <CompletedOrders />
+    </ProtectedRoute>
+  }
+/>
 
       <Route
         path="/admin/rewards/edit/:id"

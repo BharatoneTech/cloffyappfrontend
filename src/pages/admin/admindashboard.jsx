@@ -4,6 +4,7 @@ import AdmnSidebar from "../../components/admin/admnsidebar.jsx";
 import {
   fetchAllOrdersAdmin,
   fetchOrderWithItems,
+  
   updateOrderStatusAdmin,
 } from "../../api/user/orders"; // reusing same API file
 
@@ -23,12 +24,12 @@ export default function AdminDashboard() {
     const load = async () => {
       try {
         const res = await fetchAllOrdersAdmin();
-        const raw = res.data;
+         const raw = res.data.orders || [];
+        const filtered = raw.filter(o =>
+          o.status === "PLACED" || o.status === "PROCESSING"
+        );
+        setOrders(filtered);
 
-        const data = Array.isArray(raw)
-          ? raw
-          : raw.orders || raw.data || [];
-        setOrders(data);
       } catch (err) {
         console.error("Admin orders load error:", err);
       } finally {
@@ -178,7 +179,8 @@ export default function AdminDashboard() {
                           color: "#6b7280",
                         }}
                       >
-                        {o.user_email}
+                       { o.user_contact }
+
                       </span>
                     </td>
                     <td style={{ padding: "8px" }}>
@@ -292,8 +294,8 @@ export default function AdminDashboard() {
                       marginTop: "2px",
                     }}
                   >
-                    User: {activeOrder.user_name || "N/A"} (
-                    {activeOrder.user_email})
+                    User: {activeOrder.user_name || "N/A"} ({activeOrder.user_contact})
+
                   </div>
                 </div>
 

@@ -32,9 +32,21 @@ export default function AdmnSidebar() {
         overflowY: "auto",
       }}
     >
-      <h2 style={{ fontSize: "24px", marginBottom: "15px", fontWeight: "700" }}>
-        Admin Panel
-      </h2>
+   <Link
+  to="/admin/dashboard"
+  style={{
+    fontSize: "24px",
+    marginBottom: "15px",
+    fontWeight: "700",
+    textDecoration: "none",
+    color: "white",
+    display: "block",
+    cursor: "pointer",
+  }}
+>
+  Admin Panel
+</Link>
+
 
       {/* ---------------- CATEGORIES ---------------- */}
       <div
@@ -225,18 +237,18 @@ export default function AdmnSidebar() {
       )}
 
       {/* ---------------- OTHER LINKS ---------------- */}
-      <Link
-        to="/admin/orders"
-        style={{
-          textDecoration: "none",
-          color: isActive("/admin/orders") ? "black" : "white",
-          padding: "12px 15px",
-          borderRadius: "6px",
-          background: isActive("/admin/orders") ? "#fbbf24" : "transparent",
-        }}
-      >
-        Orders
-      </Link>
+     <Link
+  to="/admin/completed-orders"
+  style={{
+    textDecoration: "none",
+    color: isActive("/admin/completed-orders") ? "black" : "white",
+    padding: "12px 15px",
+    borderRadius: "6px",
+    background: isActive("/admin/completed-orders") ? "#fbbf24" : "transparent",
+  }}
+>
+  Completed Orders
+</Link>
 
       <Link
         to="/admin/payments"

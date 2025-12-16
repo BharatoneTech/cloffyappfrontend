@@ -41,6 +41,33 @@ export default function AddEditProduct() {
   const [sameBowl, setSameBowl] = useState(false);
   const [sameGold, setSameGold] = useState(false);
 
+  /* ================= STYLES ================= */
+  const inputStyle = {
+    width: "100%",
+    padding: "12px 14px",
+    marginTop: "6px",
+    marginBottom: "14px",
+    borderRadius: "8px",
+    border: "1.5px solid #d1d5db",
+    fontSize: "15px",
+    outline: "none",
+  };
+
+  const labelStyle = {
+    fontWeight: "600",
+    fontSize: "14px",
+    display: "block",
+  };
+
+  const sectionCard = {
+    background: "#fff",
+    padding: "22px",
+    marginBottom: "25px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+  };
+
+  /* ================= LOAD DATA ================= */
   useEffect(() => {
     loadCategories();
     if (edit) loadProduct();
@@ -68,13 +95,12 @@ export default function AddEditProduct() {
       status: p.status,
     });
 
-    setOldImg(p.product_img); // Cloudinary URL
-
+    setOldImg(p.product_img);
     setSameBowl(p.bowlmem_discount === p.discount);
     setSameGold(p.goldenmem_discount === p.discount);
   };
 
-  // PRICE CALCULATION
+  /* ================= PRICE CALCULATION ================= */
   useEffect(() => {
     const net = parseFloat(form.net_price) || 0;
     const generalD = parseFloat(form.discount) || 0;
@@ -130,10 +156,8 @@ export default function AddEditProduct() {
     navigate("/admin/products");
   };
 
-  // ---------------- UI ----------------
-
   return (
-    <div style={{ width: "100%", minHeight: "100vh" }}>
+    <div style={{ width: "100%", minHeight: "100vh", background: "#f3f4f6" }}>
       <AdmnSidebar />
 
       <div
@@ -143,35 +167,21 @@ export default function AddEditProduct() {
           padding: "30px",
         }}
       >
-        <h2
-          style={{
-            fontSize: "26px",
-            fontWeight: "bold",
-            marginBottom: "20px",
-          }}
-        >
+        <h2 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "20px" }}>
           {edit ? "Edit Product" : "Add New Product"}
         </h2>
 
         <form onSubmit={submit} style={{ maxWidth: "900px" }}>
           {/* BASIC INFO */}
-          <div
-            style={{
-              background: "white",
-              padding: "20px",
-              marginBottom: "25px",
-              borderRadius: "10px",
-              boxShadow: "0 3px 10px rgba(0,0,0,0.10)",
-            }}
-          >
-            <h3>Basic Information</h3>
+          <div style={sectionCard}>
+            <h3 style={{ marginBottom: "15px" }}>Basic Information</h3>
 
-            <label>Category</label>
+            <label style={labelStyle}>Category</label>
             <select
               value={form.category_id}
               onChange={(e) => updateField("category_id", e.target.value)}
               required
-              style={{ width: "100%", padding: 12, marginTop: 6 }}
+              style={inputStyle}
             >
               <option value="">Select Category</option>
               {categories.map((c) => (
@@ -181,160 +191,145 @@ export default function AddEditProduct() {
               ))}
             </select>
 
-            <label>Product Name</label>
+            <label style={labelStyle}>Product Name</label>
             <input
               value={form.product_name}
               onChange={(e) => updateField("product_name", e.target.value)}
-              style={{ width: "100%", padding: 12, marginTop: 6 }}
+              style={inputStyle}
             />
 
-            <label>Preparation Time</label>
+            <label style={labelStyle}>Preparation Time</label>
             <input
               value={form.preparation_time}
-              onChange={(e) => updateField("preparation_time", e.target.value)}
-              style={{ width: "100%", padding: 12, marginTop: 6 }}
+              onChange={(e) =>
+                updateField("preparation_time", e.target.value)
+              }
+              style={inputStyle}
             />
 
-            <label>Tagline</label>
+            <label style={labelStyle}>Tagline</label>
             <input
               value={form.tagline}
               onChange={(e) => updateField("tagline", e.target.value)}
-              style={{ width: "100%", padding: 12, marginTop: 6 }}
+              style={inputStyle}
             />
 
-            <label>Description</label>
+            <label style={labelStyle}>Status</label>
+            <select
+              value={form.status}
+              onChange={(e) => updateField("status", e.target.value)}
+              style={inputStyle}
+            >
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="INACTIVE">INACTIVE</option>
+            </select>
+
+            <label style={labelStyle}>Description</label>
             <textarea
               value={form.info}
               onChange={(e) => updateField("info", e.target.value)}
-              style={{ width: "100%", padding: 12, marginTop: 6, height: 100 }}
+              style={{ ...inputStyle, height: "110px" }}
             />
           </div>
 
           {/* PRICING */}
-          <div
-            style={{
-              background: "white",
-              padding: "20px",
-              marginBottom: "25px",
-              borderRadius: "10px",
-              boxShadow: "0 3px 10px rgba(0,0,0,0.10)",
-            }}
-          >
-            <h3>Pricing</h3>
+          <div style={sectionCard}>
+            <h3 style={{ marginBottom: "15px" }}>Pricing</h3>
 
-            <label>Net Price</label>
+            <label style={labelStyle}>Net Price</label>
             <input
               type="number"
               value={form.net_price}
               onChange={(e) => updateField("net_price", e.target.value)}
-              style={{ width: "100%", padding: 12, marginTop: 6 }}
+              style={inputStyle}
             />
 
-            <label>General Discount (%)</label>
+            <label style={labelStyle}>General Discount (%)</label>
             <input
               type="number"
               value={form.discount}
               onChange={(e) => updateField("discount", e.target.value)}
-              style={{ width: "100%", padding: 12, marginTop: 6 }}
+              style={inputStyle}
             />
 
-            {/* Bowl Discount */}
-            <div style={{ marginTop: 20 }}>
+            <label>
               <input
                 type="checkbox"
                 checked={sameBowl}
                 onChange={(e) => {
                   setSameBowl(e.target.checked);
-                  if (e.target.checked) {
+                  if (e.target.checked)
                     updateField("bowlmem_discount", form.discount);
-                  }
                 }}
-              />
-              <label style={{ marginLeft: 10 }}>Same for Bowl Member</label>
+              />{" "}
+              Same for Bowl Member
+            </label>
 
-              <input
-                type="number"
-                disabled={sameBowl}
-                value={form.bowlmem_discount}
-                onChange={(e) => updateField("bowlmem_discount", e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: 12,
-                  marginTop: 6,
-                  background: sameBowl ? "#eee" : "white",
-                }}
-                placeholder="Bowl Member Discount %"
-              />
-            </div>
+            <input
+              type="number"
+              disabled={sameBowl}
+              value={form.bowlmem_discount}
+              onChange={(e) =>
+                updateField("bowlmem_discount", e.target.value)
+              }
+              style={{
+                ...inputStyle,
+                background: sameBowl ? "#f3f4f6" : "#fff",
+              }}
+            />
 
-            {/* Gold Discount */}
-            <div style={{ marginTop: 20 }}>
+            <label>
               <input
                 type="checkbox"
                 checked={sameGold}
                 onChange={(e) => {
                   setSameGold(e.target.checked);
-                  if (e.target.checked) {
+                  if (e.target.checked)
                     updateField("goldenmem_discount", form.discount);
-                  }
                 }}
-              />
-              <label style={{ marginLeft: 10 }}>Same for Gold Member</label>
+              />{" "}
+              Same for Gold Member
+            </label>
 
-              <input
-                type="number"
-                disabled={sameGold}
-                value={form.goldenmem_discount}
-                onChange={(e) => updateField("goldenmem_discount", e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: 12,
-                  marginTop: 6,
-                  background: sameGold ? "#eee" : "white",
-                }}
-                placeholder="Golden Member Discount %"
-              />
-            </div>
+            <input
+              type="number"
+              disabled={sameGold}
+              value={form.goldenmem_discount}
+              onChange={(e) =>
+                updateField("goldenmem_discount", e.target.value)
+              }
+              style={{
+                ...inputStyle,
+                background: sameGold ? "#f3f4f6" : "#fff",
+              }}
+            />
           </div>
 
           {/* IMAGE */}
-          <div
-            style={{
-              background: "white",
-              padding: "20px",
-              marginBottom: "25px",
-              borderRadius: "10px",
-              boxShadow: "0 3px 10px rgba(0,0,0,0.10)",
-            }}
-          >
+          <div style={sectionCard}>
             <h3>Product Image</h3>
 
-            <input type="file" onChange={(e) => setImgFile(e.target.files[0])} />
+            <input
+              type="file"
+              onChange={(e) => setImgFile(e.target.files[0])}
+            />
 
             {oldImg && !imgFile && (
               <img
-                src={oldImg} // Show Cloudinary URL
+                src={oldImg}
                 width={160}
                 style={{
                   marginTop: "15px",
                   borderRadius: "12px",
-                  boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
+                  boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
                 }}
               />
             )}
           </div>
 
           {/* PRICE PREVIEW */}
-          <div
-            style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: "10px",
-              boxShadow: "0 3px 10px rgba(0,0,0,0.10)",
-            }}
-          >
+          <div style={sectionCard}>
             <h3>Final Calculated Prices</h3>
-
             <p><b>Selling Price:</b> ₹{prices.selling_price}</p>
             <p><b>Bowl Member Price:</b> ₹{prices.bowlmem_sellingprice}</p>
             <p><b>Golden Member Price:</b> ₹{prices.goldenmem_sellingprice}</p>
@@ -343,14 +338,14 @@ export default function AddEditProduct() {
           <button
             type="submit"
             style={{
-              background: "#007bff",
+              background: "linear-gradient(135deg, #2563eb, #1e40af)",
               color: "white",
-              padding: "12px 20px",
+              padding: "14px 26px",
               border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
+              borderRadius: "10px",
               fontSize: "16px",
-              marginTop: "20px",
+              fontWeight: "600",
+              cursor: "pointer",
             }}
           >
             {edit ? "Update Product" : "Create Product"}

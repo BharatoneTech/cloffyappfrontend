@@ -6,6 +6,7 @@ export const CartContext = createContext();
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
 
+  // ADD TO CART
   const addToCart = (product) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.product.id === product.id);
@@ -28,18 +29,20 @@ export function CartProvider({ children }) {
     });
   };
 
+  // UPDATE QUANTITY (FIXED)
   const updateQuantity = (productId, qty) => {
     setItems((prev) =>
       prev
         .map((i) =>
           i.product.id === productId
-            ? { ...i, qty: Math.max(1, qty) }
+            ? { ...i, qty }
             : i
         )
-        .filter((i) => i.qty > 0)
+        .filter((i) => i.qty > 0) // REMOVE ITEM WHEN qty = 0
     );
   };
 
+  // REMOVE COMPLETELY
   const removeFromCart = (productId) => {
     setItems((prev) => prev.filter((i) => i.product.id !== productId));
   };

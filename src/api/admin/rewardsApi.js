@@ -1,9 +1,22 @@
 import client from "../axiosClient";
 
-export const getRewards = () => client.get("/rewards");
-export const getRewardById = (id) => client.get(`/rewards/${id}`);
+// ---------- ADMIN REWARD APIs ----------
 
-export const createReward = (data) => client.post("/rewards", data);
-export const updateReward = (id, data) => client.put(`/rewards/${id}`, data);
+// get all rewards (admin)
+export const getRewards = () => client.get("/rewards/admin");
 
-export const deleteReward = (id) => client.delete(`/rewards/${id}`);
+// get single reward by id (admin)
+export const getRewardById = (id) =>
+  client.get(`/rewards/admin/${id}`);
+
+// create reward (admin)
+export const createReward = (data) =>
+  client.post("/rewards", data);
+
+// update reward (admin)
+export const updateReward = (id, data) =>
+  client.put(`/rewards/admin/${id}`, data);
+
+// delete reward (admin)
+export const deleteReward = (id) =>
+  client.delete(`/rewards/admin/${id}`);

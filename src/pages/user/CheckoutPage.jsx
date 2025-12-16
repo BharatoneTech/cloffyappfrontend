@@ -173,41 +173,43 @@ useEffect(() => {
     isGoldenMember,
   ]);
 
-  if (items.length === 0) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#f5f7fa",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          padding: "20px",
-        }}
-      >
-        <h2 style={{ marginBottom: "10px" }}>Your cart is empty</h2>
-        <button
-          onClick={() => navigate("/")}
-          style={{
-            padding: "10px 18px",
-            borderRadius: "999px",
-            border: "none",
-            background: "#4f46e5",
-            color: "white",
-            fontWeight: "600",
-            cursor: "pointer",
-          }}
-        >
-          Go to Dashboard
-        </button>
-      </div>
-    );
-  }
+  // if (items.length === 0) {
+  //   return (
+  //     <div
+  //       style={{
+  //         minHeight: "100vh",
+  //         background: "#f5f7fa",
+  //         display: "flex",
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //         flexDirection: "column",
+  //         padding: "20px",
+  //       }}
+  //     >
+  //       <h2 style={{ marginBottom: "10px" }}>Your cart is empty</h2>
+  //       <button
+  //         onClick={() => navigate("/")}
+  //         style={{
+  //           padding: "10px 18px",
+  //           borderRadius: "999px",
+  //           border: "none",
+  //           background: "#4f46e5",
+  //           color: "white",
+  //           fontWeight: "600",
+  //           cursor: "pointer",
+  //         }}
+  //       >
+  //         Go to Dashboard
+  //       </button>
+  //     </div>
+  //   );
+  // }
 
+  
   const handleDecrease = (productId, currentQty) => {
     if (currentQty <= 1) {
       removeFromCart(productId);
+    navigate("/user/dashboard", { replace: true });
     } else {
       updateQuantity(productId, currentQty - 1);
     }
@@ -312,7 +314,7 @@ useEffect(() => {
           }}
         >
           <button
-            onClick={() => navigate(-1)}
+         onClick={() => navigate("/user/dashboard")}
             style={{
               border: "none",
               background: "transparent",
